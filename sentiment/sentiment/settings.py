@@ -28,6 +28,7 @@ TEMPLATE_DEBUG = False
 # Here it will be the domain of the final deployment
 ALLOWED_HOSTS = [
     'localhost',
+    '127.0.0.1',
     #'.example.com', # Allow domain and subdomains
     #'.example.com.', # Also allow FQDN and subdomains
 ]
