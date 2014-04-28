@@ -3,44 +3,94 @@ Sentiment Analysis
 
 Sentiment analysis is a REST API for opinion mining (also known as sentiment analysis) of spanish comments. It analizes a comment, tweet, post or sentence and determines sentiment polarity such as negative, positive or neutral according to the vocabulary used. With this API you can:
 
- > - Analize a single comment and obtain sentiment polarity (positive, negative, neutral)
- > - Analize multiple comments and obtain sentiment polarity of each of these comments
- > - For a set of comments retrieve overall-sentiment polarity
- > - For a set of comments retrieve statistics about sentiment orientation
- > - For a set of comments retrieve a bag of words (folksonomy) related to sentiment orientation
+  - Analize a single comment and obtain sentiment polarity (positive, negative, neutral)
+  - Analize multiple comments and obtain sentiment polarity of each of these comments
+  - For a set of comments retrieve overall-sentiment polarity
+  - For a set of comments retrieve statistics about sentiment orientation
+  - For a set of comments retrieve a bag of words (folksonomy) related to sentiment orientation
 
 
 Version
 ----
-0.1
+0.1.0
 
-
-
-Installation
+Download
 --------------
 
 ```sh
 download source file from bit bucket [spribo_content/sentiment-analysis]
-
 ```
+ > [sentiment analysis]
 
-##### Configure Plugins. Instructions in following README.md files
-
-* plugins/dropbox/README.md
-* plugins/github/README.md
-* plugins/googledrive/README.md
+###Dependencies:
 
 ```sh
-node app
+pattern (2.6)
+django (1.6.3)
+djangorestframework (2.3.13)
+django-rest-swagger (0.1.14)
 ```
 
+Deployment
+----------
+###Unix-based:
+It is highly recommended to use *virtualenv*:
+```sh
+sudo pip install virtualenv
+```
+Create the directory for deployment and activate it:
+```sh
+sudo virtualenv /your_path/deployment_venv
+cd /your_path/deployment_venv
+source bin/activate
+```
+Install dependencies:
+```sh
+pip install pattern
+pip install django
+pip install djangorestframework
+pip install django-rest-swagger
+```
+####Using GUNICORN for dynamic content:
+```sh
+pip install gunicorn
+cd sentiment
+gunicorn sentiment.wsgi:application
+```
+And now our service is running in http://localhost:8000 or http://127.0.0.1:800 
+
+To chance port use:
+```sh
+gunicorn sentiment.wsgi:application --bind=127.0.0.1:8001
+```
+####Using NGINX for static content (pretty browsable interface)
+
+For Linux
+```sh
+sudo apt-get install nginx
+```
+For Mac OS, firt install homebrew:
+```sh
+sudo mkdir /usr/local
+sudo chown -R `whoami` /usr/local
+curl -L http://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C /usr/local
+brew install git
+cd /usr/local
+git init
+git remote add origin git://github.com/mxcl/homebrew.git
+git pull origin master
+```
+Then install NGINX:
+```sh
+brew install nginx
+```
+...
+```
 Usage
 -----------
-
 Actually this API support two methods: GET and POST.
 
 ###GET:
-<p>
 URL:
 ```sh
 http://yourdomain.com/comments
@@ -55,7 +105,6 @@ EXAMPLE_URL :
 ```sh
 http://localhost:8000/comments?comment=%27este+es+un+comentario+muy+malo%27&classifier_type=MNB&no_classes=2
 ```
-<enter>
 You can also use from bash:
 ```sh
 curl http://localhost:8000/comments?comment=%27este+es+un+buen+comentario%27
@@ -183,5 +232,6 @@ License
 
 MIT
 
+[sentiment analysis]:https://bitbucket.org/spribo_contenido/sentiment-analysis/overview
 
     
