@@ -44,6 +44,22 @@ sudo virtualenv /your_path/deployment_venv
 cd /your_path/deployment_venv
 source bin/activate
 ```
+
+Copy sentiment directory into deployment_env directory, project should look like:
+```sh
+deployment_env
+|-- sentiment
+|	|-- manage.py
+|	|-- tmp.db
+|	|-- sentiment
+|	|-- comments
+|	|	`-- classifier
+|	|-- static-files
+|	|-- rest-framework-swagger
+|-- bin
+|-- lib
+|-- include
+```
 Install dependencies:
 ```sh
 pip install pattern
@@ -57,7 +73,7 @@ pip install gunicorn
 cd sentiment
 gunicorn sentiment.wsgi:application
 ```
-And now our service is running in http://localhost:8000 or http://127.0.0.1:800 
+And now our service is running in http://localhost:8000 or http://127.0.0.1:8000
 
 To chance port use:
 ```sh
@@ -69,10 +85,10 @@ For Linux
 ```sh
 sudo apt-get install nginx
 ```
-For Mac OS, firt install homebrew:
+For Mac OS, firt install git then homebrew:
 ```sh
 sudo mkdir /usr/local
-sudo chown -R `whoami` /usr/local
+sudo chown -R `_username_` /usr/local
 curl -L http://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C /usr/local
 brew install git
 cd /usr/local
@@ -84,10 +100,56 @@ Then install NGINX:
 ```sh
 brew install nginx
 ```
-...
+Copy the STATIC_ROOT of settings.py 
+```python
+STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
 ```
+Here BASE_DIR is the direction of deployment directory.
+Then, modify config nginx file (make backup of config file, just in case)
+```sh
+cd /usr/local/etc/nginx/nginx.config
+```
+Modify followig parameters:
+```sh
+server{
+	listen 8000;
+	server_name localhost;
+		
+}
+
+location /{
+	proxy_pass http://127.0.0.1:8001;
+}
+
+location /static/{
+	autoindex on;
+	alias 'here you put static_root directory'
+}
+
+```
+Then link config file
+```sh
+mkdir sites-enabled
+sudo ln nginx.config sites-enabled/any_project_name
+```
+Start servers, first nginx:
+```sh
+sudo start nginx
+```
+or:
+```sh
+launchctl load ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist
+```
+And run gunicorn as daemon:
+```sh
+gunicorn sentiment.wsgi:application --bind=127.0.0.1:8001 --daemon
+```
+
+###Deploying in Windows with Apache and mod_wsgi:
+[Deploying with Apache]
+______________________________________
 Usage
------------
+==============
 Actually this API support two methods: GET and POST.
 
 ###GET:
@@ -230,8 +292,9 @@ Response example:
 License
 --------
 
-MIT
+[BSD]
 
-[sentiment analysis]:https://bitbucket.org/spribo_contenido/sentiment-analysis/overview
-
+[sentiment analysis]:https://bitbucket.org/spribo_contenido/sentiment-analysis/get/a73ef329d2d4.zip
+[Deploying with Apache]:https://docs.djangoproject.com/en/1.2/howto/deployment/modwsgi/
+[BSD]:http://www.linfo.org/bsdlicense.html
     
