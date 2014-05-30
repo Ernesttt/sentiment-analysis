@@ -40,7 +40,11 @@ class JSONClassificationResponse:
 			for comment in parsed_json['data']:
 				if len(comment['comment'].split()) > 50:
 					classifier_type = 'MNB'
-				sentiment = classifier.classify_comment(comment['comment'], classifier_type, no_classes)
+				else:
+					classifier_type = 'SVM'
+				sentiment = classifier.classify_comment(comment['comment'],
+					                                    classifier_type,
+					                                    no_classes)
 				if sentiment == 'muy_negativo':
 					comment[u'polarity'] = sentiment
 					comment[u'ranking'] = 1
@@ -62,8 +66,10 @@ class JSONClassificationResponse:
 					comment[u'ranking'] = 5
 					muy_positivos.append(comment['comment'])
 			# calculating statistics
-			total_comments = len(muy_negativos) + len(negativos) + len(neutros) + len(positivos) + len(muy_positivos)
-			overall_sentiment = float((-2*len(muy_negativos) - 1*len(negativos) + 1*len(positivos) + 2*len(muy_positivos))/ \
+			total_comments = len(muy_negativos) + len(negativos) + len(neutros) + \
+			                 len(positivos) + len(muy_positivos)
+			overall_sentiment = float((-2 * len(muy_negativos) - 1 * len(negativos) + \
+				                1 * len(positivos) + 2 * len(muy_positivos)) / \
 				                (total_comments))
 			statistics = {
 						u'muy_negativos':len(muy_negativos),
@@ -72,31 +78,49 @@ class JSONClassificationResponse:
 						u'positivos':len(positivos),
 						u'muy_positivos':len(muy_positivos)}
 			# returning response
-			if response_type == 'minimal':
-				return {'Statistics':statistics, 'Overall Sentiment':overall_sentiment}
-			else:
+			rf = response_type['folksonomies']
+			rc = response_type['comments'] 
+			if not isinstance(rf, bool) or rc not in ['nothing', 'ids_only', 'full']:
+				return 'No response defined or wrong format'
+			# statistics are always returned
+			if rf:
 				# retrieving folksonomies
 				folksonomy_muy_negativos = {'muy_negativos':folksonomy(muy_negativos,10)}
 				folksonomy_negativos = {'negativos':folksonomy(negativos,10)}
 				folksonomy_neutros = {'neutros':folksonomy(neutros,10)}
 				folksonomy_positivos = {'positivos':folksonomy(positivos,10)}
 				folksonomy_muy_positivos = {'muy_positivos':folksonomy(muy_positivos,10)}
-				folksonomy_list = [folksonomy_muy_negativos, folksonomy_negativos, folksonomy_neutros, folksonomy_positivos, 
-								  folksonomy_muy_positivos]
-
-				if response_type == 'partial':
+				folksonomy_list = [folksonomy_muy_negativos, folksonomy_negativos,
+				                   folksonomy_neutros, folksonomy_positivos, 
+								   folksonomy_muy_positivos]
+				if rc == 'nothing':
+					return {'Statistics':statistics, 'Overall Sentiment': overall_sentiment,
+							'folksonomies': folksonomy_list}
+				if rc == 'ids_only':
 					for comment in parsed_json['data']:
 						del comment['comment']
-					return {'Statistics':statistics, 'Overall Sentiment': overall_sentiment, 'Comments':parsed_json['data'], 
-							'folksonomies': folksonomy_list}
+					return {'Statistics':statistics, 'Overall Sentiment': overall_sentiment,
+					        'Comments':parsed_json['data'], 'folksonomies': folksonomy_list}
+				if rc == 'full':
+					return {'Statistics':statistics, 'Overall Sentiment': overall_sentiment, 
+					        'Comments':parsed_json['data'], 'folksonomies': folksonomy_list}
+			else:
+				if rc == 'nothing':
+					return {'Statistics':statistics, 'Overall Sentiment': overall_sentiment}
+				if rc == 'ids_only':
+					for comment in parsed_json['data']:
+						del comment['comment']
+					return {'Statistics':statistics, 'Overall Sentiment': overall_sentiment,
+					        'Comments':parsed_json['data']}
+				if rc == 'full':
+					return {'Statistics':statistics, 'Overall Sentiment': overall_sentiment, 
+					        'Comments':parsed_json['data']}
 
-				elif response_type == 'full':
-					return {'Statistics':statistics, 'Overall Sentiment': overall_sentiment, 'Comments':parsed_json['data'], 
-							'folksonomies': folksonomy_list}
-				else:
-					return 'not response defined'
 		except:
-			return {'wrong JSON format, valid is the form of:': {"control": { "classifier": "automatic", "no_classes": "default", 
-                   "response": "full"}, "data":[{"comment": "primer comentario", "id": 1}, {"comment": "segundo comentario", "id": 2}, 
-                   { "comment": "n-esimo comentario", "id": 99}]}}
+			return {'wrong JSON format, valid is the form of:': {"control": { "classifier":
+			        "automatic", "no_classes": "default", "response": { 
+			        "folksonomies":True, "comments":"full"}}, "data":
+			        [{"comment": "primer comentario", "id": 1}, {"comment":
+			        "segundo comentario", "id": 2}, {"comment": "n-esimo comentario", "id": 
+			        99}]}}
 

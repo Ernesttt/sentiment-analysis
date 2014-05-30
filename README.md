@@ -25,6 +25,7 @@ download source file from bit bucket [spribo_content/sentiment-analysis]
 ###Dependencies:
 
 ```sh
+python (2.7)
 pattern (2.6)
 django (1.6.3)
 djangorestframework (2.3.13)
@@ -187,7 +188,7 @@ JSON FORMAT:
      "control": {
           "classifier": "automatic", 
           "no_classes": "default", 
-          "response": "full"
+          "response": {"folksonomies":true, "comments":"full"}
      }, 
      "data": [
           {
@@ -221,9 +222,11 @@ We define 2 parts: control and data
          "quick" means 2 classes (negativo, positivo) 
 
 - response
-         "full" full response, comment by comment polarity, overall_sentiment, statistics, and folksonomies
-         "partial" partial response, ids_only polarity,  overall_sentiment, statistics, and folksonomies
-         "minimal" only overall_sentiment and statistics
+         "folksonomies" if true returns folksonomies (remember json true/false are lowercase)
+         "comments"  if "ids_only" returns ids_only polarity, 
+                     if "full" returns comment by comment polarity
+                     if "nothing" returns nothing
+
  
 
 ####Data:
@@ -232,7 +235,7 @@ We define 2 parts: control and data
 
 Request example:
 ```sh
-curl -X POST http://127.0.0.1:8000/comments -d '{"control": {"classifier": "automatic", "no_classes": "default", "response": "full"}, "data": [{"comment": "primer comentario", "id": 1}, {"comment": "segundo comentario", "id": 2}, {"comment": "n-esimo comentario", "id": 99}]}' -H "Content-Type: application/json"
+curl -X POST http://127.0.0.1:8000/comments -d '{"control": {"classifier": "automatic", "no_classes": "default", "response": {"folksonomies":true, "comments":"full"}}, "data": [{"comment": "primer comentario", "id": 1}, {"comment": "segundo comentario", "id": 2}, {"comment": "n-esimo comentario", "id": 99}]}' -H "Content-Type: application/json"
 ```
 Response example:
 ```sh
