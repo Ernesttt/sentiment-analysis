@@ -297,7 +297,7 @@ License
 
 [BSD]
 
-[sentiment analysis]:https://bitbucket.org/spribo_contenido/sentiment-analysis/get/a73ef329d2d4.zip
+[sentiment analysis]:https://bitbucket.org/spribo_contenido/sentiment-analysis/get/2f4abb4a945e.zip
 [Deploying with Apache]:https://docs.djangoproject.com/en/1.2/howto/deployment/modwsgi/
 [BSD]:http://www.linfo.org/bsdlicense.html
     
