@@ -128,6 +128,7 @@ location /static/{
 }
 
 ```
+To see more options of NGINX configuration see [nginx conf]
 Then link config file
 ```sh
 mkdir sites-enabled
@@ -300,3 +301,4 @@ License
 [sentiment analysis]:https://bitbucket.org/spribo_contenido/sentiment-analysis/get/2f4abb4a945e.zip
 [Deploying with Apache]:https://docs.djangoproject.com/en/1.2/howto/deployment/modwsgi/
 [BSD]:http://www.linfo.org/bsdlicense.html
+[nginx conf]:http://nginx.com/resources/admin-guide/web-server/
