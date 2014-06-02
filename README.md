@@ -101,14 +101,15 @@ Then install NGINX:
 ```sh
 brew install nginx
 ```
-Copy the STATIC_ROOT of settings.py (This addres is printed in the bash as /context_address/deployment_env/static-files)
+Copy the STATIC_ROOT of settings.py 
 ```python
 STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
 ```
-Here BASE_DIR is the direction of deployment directory.
+Here BASE_DIR is the direction of deployment directory.(This addres is printed in the bash as /context_address/deployment_env/static-files)
 Then, modify config nginx file (make backup of config file, just in case)
 ```sh
-cd /usr/local/etc/nginx/nginx.config
+cd /usr/local/etc/nginx/
+vim nginx.config
 ```
 Modify followig parameters:
 ```sh
@@ -128,7 +129,7 @@ location /static/{
 }
 
 ```
-To see more options of NGINX configuration see [nginx conf].
+To see more options of NGINX configuration see [nginx conf]
 
 Then link config file
 ```sh
