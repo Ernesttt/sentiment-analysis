@@ -114,7 +114,7 @@ Modify followig parameters:
 ```sh
 server{
 	listen 8000;
-	server_name localhost;
+	server_name 'your-fully-qualified-domain-name.com';
 		
 }
 
@@ -300,4 +300,3 @@ License
 [sentiment analysis]:https://bitbucket.org/spribo_contenido/sentiment-analysis/get/2f4abb4a945e.zip
 [Deploying with Apache]:https://docs.djangoproject.com/en/1.2/howto/deployment/modwsgi/
 [BSD]:http://www.linfo.org/bsdlicense.html
-    
