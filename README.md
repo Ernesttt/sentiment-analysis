@@ -20,7 +20,9 @@ Download
 ```sh
 download source file from bit bucket [spribo_content/sentiment-analysis]
 ```
- > [sentiment analysis]
+ > [sentiment analysis in github]
+ 
+ > [sentiment analysis in bitbucket]
 
 ###Dependencies:
 
@@ -50,13 +52,13 @@ Copy sentiment directory into deployment_env directory, project should look like
 ```sh
 deployment_env
 |-- sentiment
-|	|-- manage.py
-|	|-- tmp.db
-|	|-- sentiment
-|	|-- comments
-|	|	`-- classifier
-|	|-- static-files
-|	|-- rest-framework-swagger
+|    |-- manage.py
+| |-- tmp.db
+| |-- sentiment
+| |-- comments
+| | `-- classifier
+| |-- static-files
+| |-- rest-framework-swagger
 |-- bin
 |-- lib
 |-- include
@@ -114,18 +116,18 @@ vim nginx.config
 Modify followig parameters:
 ```sh
 server{
-	listen 8000;
-	server_name 'your-fully-qualified-domain-name.com';
-		
+  listen 8000;
+  server_name 'your-fully-qualified-domain-name.com';
+    
 }
 
 location /{
-	proxy_pass http://127.0.0.1:8001;
+  proxy_pass http://127.0.0.1:8001;
 }
 
 location /static/{
-	autoindex on;
-	alias 'here you put static_root directory'
+  autoindex on;
+  alias 'here you put static_root directory'
 }
 
 ```
@@ -300,7 +302,8 @@ License
 
 [BSD]
 
-[sentiment analysis]:https://bitbucket.org/spribo_contenido/sentiment-analysis/get/2f4abb4a945e.zip
+[sentiment analysis in github]:https://github.com/Ernesttt/sentiment-analysis
+[sentiment analysis in bitbucket]:https://bitbucket.org/spribo_contenido/sentiment-analysis/downloads
 [Deploying with Apache]:https://docs.djangoproject.com/en/1.2/howto/deployment/modwsgi/
 [BSD]:http://www.linfo.org/bsdlicense.html
 [nginx conf]:http://nginx.com/resources/admin-guide/web-server/
