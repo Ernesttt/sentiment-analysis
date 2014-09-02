@@ -1,3 +1,4 @@
+from __future__ import division
 from classification import Classification
 from metrics_reduced import SpanishTools
 from folksonomy import folksonomy
@@ -116,7 +117,8 @@ class JSONClassificationResponse:
 					return {'Statistics':statistics, 'Overall Sentiment': overall_sentiment, 
 					        'Comments':parsed_json['data']}
 
-		except:
+		except Exception as e:
+			print e
 			return {'wrong JSON format, valid is the form of:': {"control": { "classifier":
 			        "automatic", "no_classes": "default", "response": { 
 			        "folksonomies":True, "comments":"full"}}, "data":
